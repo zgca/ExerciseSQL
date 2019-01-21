@@ -1,4 +1,4 @@
---- 数据库的操作
+ --- 数据库的操作
 
 	-- SQL 语句最后要有分号；；；结尾
 	-- 不区分大小写
@@ -298,17 +298,63 @@
 	select gender, group_concat(name, "_", age," ", id) from students where gender=1 group by gender;
 
 	-- having
-	-- 查询平均年龄超过30岁的性别，以及姓名
+	-- 查询平均年龄超过30岁的性别的分组，以及显示姓名
 	select gender ,group_concat(name) from students group by gender having avg(age)>30;
 
+	-- 查询性别分组中超过2个的分组
+	select gender, group_concat(name) from students group by gender having count(*)>2;
+
 -- 分页
-	-- limit start, count
+	-- limit start（开始）, count（显示个数）
+	-- limit count 直接就是显示多少个
 	-- 限制查询出来的数据的显示的个数
+	select * from students where gender=1 limit 2;
+	select * from students limit 5;
+
 	 
-	-- 查询前5个数据
+	-- 查询前5个数据 京东数据库
 	-- 查询id6-10（包含）的顺序
 	-- 每页显示2个，第一个页面
-	-- 每页显示2个，第二个页面
+	-- 每页显示2个，第二个页面 limit （第几页-1）*每页的个数，每页的个数
+	select * from students limit 0, 5;
+	select * from students limit 1, 5;
+
+	-- 失败的 select * from students limit 2*(6-1),2;
+
+	-- ***limit永远在最后面
+
+
+-- 链接查询,多个表的连接查询
+	-- 内链接交集，查询多个数据表共有的部分
+	-- inner join ... on 条件
+	-- 查找所有学生的班级
+	select * from students as s inner join classes as c on s.cls_id=c.id;
+
+	-- 按照要求显示姓名、班级
+	select students.*, classes.name from students inner join classes on students.cls_id=classes.id;
+	select students.name, classes.name from students inner join classes on students.cls_id=classes.id;
+
+	-- 给数据表起名字
+	select s.name, c.name from students as s inner join classes as c on s.cls_id=c.id;
+
+	-- 外链接
+	-- left join
+	-- 以左边的表为基准，找两个表的相同，如果不同则置为null
+	select * from students as s left join classes as c on s.cls_id=c.id;
+
+	-- right join 很少使用，只需要将两个表的顺序调换，在使用left join即可
+
+
+	-- 查询没有对应班级的学生的信息
+	-- 注意：要有一个表思想，查询出来的是个新表，还是在原来的基础上做操作呢
+	select * from students as s left join classes as c on s.cls_id=c.id where s.cls_id is null;
+	select * from students as s left join classes as c on s.cls_id=c.id having s.cls_id is null;
+
+
+
+
+
+
 
 
 
