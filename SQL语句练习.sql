@@ -149,15 +149,15 @@
 		select * from students where name="小李飞刀";
 
 		-- 查询指定列
-		-- select name,gender form students;
-		select name,gender form students;
+		-- select name,gender from students;
+		select name,gender from students;
 
 		-- 可以使用as为列或表指定别名
-		select name as 姓名,gender as 性别 form students;
+		select name as 姓名,gender as 性别 from students;
 
 		-- 字段的顺序
 		-- 查询顺序按照自己的顺序
-		select gender as 性别,name as 姓名 form students;
+		select gender as 性别,name as 姓名 from students;
 
 	-- 删除数据
 		-- 物理删除
@@ -176,12 +176,12 @@
 	select * from students;
 
 	-- 可以通过as给表起别名
-	select name as 姓名,gender as 性别 form students;
-	select students.name, students.gender form students;
-	select s.name, s.gender form students as s;
+	select name as 姓名,gender as 性别 from students;
+	select students.name, students.gender from students;
+	select s.name, s.gender from students as s;
 
 	-- 消除重复行 
-	select distinct gender form stuents;
+	select distinct gender from stuents;
 
 	-- 条件查询，只要是表中的字段就可以用，不用在乎是否筛选出来
 		-- 比较运算符
@@ -350,9 +350,30 @@
 	select * from students as s left join classes as c on s.cls_id=c.id where s.cls_id is null;
 	select * from students as s left join classes as c on s.cls_id=c.id having s.cls_id is null;
 
+-- 自关联
+	-- 一个表里的字段的数据是另一个字段里的值
+	-- 全国省市县关系，一张表
+	-- 公司人员职务上下级关系表
+	select * from areas where pid is null;
+	-- 查找山东的aid
+	select aid from areas where atitle="山东省";
+	-- 查找山东所有的市
+	select * from areas where pid=370000;
+	-- 查找青岛所有的区
+	select * from areas where pid=370200;
 
+	-- 如何要一步搞定
+	select * from areas as province inner join areas as city on city.pid=province.aid having province.atitle="山东省"；
+	select province.atitle, city.atitle from areas as province inner join areas as city on city.pid=province.aid having province.atitle="山东省"；
 
+-- 子查询,效率比较低，尽量不要用
+	-- 标量子查询（select语句中嵌套另一个子select语句，先执行子select语句）
+	-- 查询最高的男生的信息
+	select * from students where height=(select max(height) from students);
 
+	-- 列级子查询
+	-- 查询学生的班级号能够对应的学生信息
+	select * from students where cls_id in (select id from classes);
 
 
 
